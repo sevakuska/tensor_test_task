@@ -51,7 +51,7 @@ def test_third_scenario(browser: Chrome) -> None:
         sbis_web_setup
     )
 
-    sleep(5)
+    sleep(15)
 
     filename = f'{getcwd()}/sbisplugin-setup-web.exe'
     stats = stat(filename)
