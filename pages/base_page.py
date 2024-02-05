@@ -1,20 +1,21 @@
-from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.remote.webelement import WebElement
 
 
 class BasePage:
     def __init__(self, driver: WebDriver) -> None:
         self.driver = driver
-        self.url = None
+        self.url: str | None = None
 
-    def open_site(self):
+    def open_site(self) -> None:
         if self.url is None:
             raise ValueError('URL is not set.')
 
-        return self.driver.get(self.url)
+        self.driver.get(self.url)
 
-    def find_element(self, locator: tuple[str, str]):
+    def find_element(self, locator: tuple[str, str]) -> WebElement:
         return self.driver.find_element(*locator)
 
     @property
-    def title(self):
+    def title(self) -> str:
         return self.driver.title

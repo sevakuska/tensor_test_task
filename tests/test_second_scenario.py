@@ -1,3 +1,4 @@
+from selenium.webdriver import Chrome
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -7,7 +8,7 @@ from locators.sbis_contacts_page_locators import SbisContactsPageLocators
 from utils.url import wait_for_url_to_change
 
 
-def test_2nd(browser):
+def test_second_scenario(browser: Chrome) -> None:
     sbis_root_page = SbisRootPage(browser)
     sbis_root_page.open_site()
     s_title = 'СБИС — экосистема для бизнеса: учет, управление и коммуникации'

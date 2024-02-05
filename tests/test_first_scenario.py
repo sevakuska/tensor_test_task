@@ -1,3 +1,4 @@
+from selenium.webdriver import Chrome
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import StaleElementReferenceException
@@ -9,7 +10,7 @@ from locators.tensor_root_page_locators import TensorRootPageLocators
 from locators.tensor_about_page_locators import TensorAboutPageLocators
 
 
-def test_1st(browser):
+def test_first_scenario(browser: Chrome) -> None:
     sbis_root_page = SbisRootPage(browser)
     sbis_root_page.open_site()
 
@@ -58,11 +59,7 @@ def test_1st(browser):
         )
         assert tensor_power_in_people.text == 'Сила в людях'
 
-    tensor_about_a = WebDriverWait(
-        tensor_root_page.driver,
-        30,
-        ignored_exceptions=StaleElementReferenceException
-    ).until(
+    tensor_about_a = WebDriverWait(tensor_root_page.driver, 30).until(
         lambda x: x.find_element(*TensorRootPageLocators.ABOUT_A)
     )
 
@@ -72,8 +69,6 @@ def test_1st(browser):
         'arguments[0].click();',
         tensor_about_a
     )
-
-    # ----------------------------------------------------------------------- #
 
     tensor_about_page = tensor_root_page.go_to_tensor_about_page()
     photos_locators = (

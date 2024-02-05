@@ -1,4 +1,4 @@
-from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.chrome.webdriver import WebDriver
 
 from pages.base_page import BasePage
 from pages.tensor_root_page import TensorRootPage
