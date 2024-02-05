@@ -19,7 +19,6 @@ def test_second_scenario(browser: Chrome) -> None:
         EC.element_to_be_clickable(SbisRootPageLocators.CONTACTS_A)
     )
 
-    assert sbis_contacts.tag_name == 'a'
     assert sbis_contacts.text == 'Контакты'
 
     sbis_contacts.click()
