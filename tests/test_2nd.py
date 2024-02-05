@@ -4,6 +4,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from pages.sbis_root_page import SbisRootPage
 from locators.sbis_root_page_locators import SbisRootPageLocators
 from locators.sbis_contacts_page_locators import SbisContactsPageLocators
+from utils.url import wait_for_url_to_change
 
 
 def test_2nd(browser):
@@ -13,20 +14,14 @@ def test_2nd(browser):
 
     assert sbis_root_page.title == s_title
 
-    sbis_contacts = sbis_root_page.find_element(
-        SbisRootPageLocators.CONTACTS_A
-    )
-    WebDriverWait(sbis_root_page.driver, 30).until(
-        EC.element_to_be_clickable(sbis_contacts)
+    sbis_contacts = WebDriverWait(sbis_root_page.driver, 30).until(
+        EC.element_to_be_clickable(SbisRootPageLocators.CONTACTS_A)
     )
 
     assert sbis_contacts.tag_name == 'a'
     assert sbis_contacts.text == 'Контакты'
 
-    sbis_root_page.driver.execute_script(
-        'arguments[0].click();',
-        sbis_contacts
-    )
+    sbis_contacts.click()
     sbis_contacts_page = sbis_root_page.go_to_sbis_contacts_page()
 
     selected_region = WebDriverWait(sbis_contacts_page.driver, 30).until(
@@ -36,35 +31,38 @@ def test_2nd(browser):
     )
 
     assert selected_region.text == 'Свердловская обл.'
-    sbis_contacts_page.driver.execute_script(
-        'arguments[0].click();',
-        selected_region
-    )
-    sbis_contacts_page.driver.execute_script(
-        'arguments[0].click();',
-        sbis_contacts_page.find_element(
+
+    selected_region.click()
+    select_region = WebDriverWait(sbis_contacts_page.driver, 30).until(
+        EC.element_to_be_clickable(
             SbisContactsPageLocators.SELECT_KAMCHATKA_SPAN
         )
     )
+    select_region.click()
 
-    r = WebDriverWait(sbis_contacts_page.driver, 30).until(
+    wait_for_url_to_change(
+        sbis_contacts_page.driver,
+        'https://sbis.ru/contacts/66-sverdlovskaya-oblast?tab=clients'
+    )
+
+    url = 'https://sbis.ru/contacts/41-kamchatskij-kraj?tab=clients'
+    city = WebDriverWait(sbis_contacts_page.driver, 30).until(
         EC.visibility_of_element_located(
-            SbisContactsPageLocators.A
+            SbisContactsPageLocators.CITY
         )
     )
-    s = WebDriverWait(sbis_contacts_page.driver, 30).until(
+    office_name = WebDriverWait(sbis_contacts_page.driver, 30).until(
         EC.visibility_of_element_located(
             SbisContactsPageLocators.SBIS_KAMCHATKA
         )
     )
-    a = WebDriverWait(sbis_contacts_page.driver, 30).until(
+    office_address = WebDriverWait(sbis_contacts_page.driver, 30).until(
         EC.visibility_of_element_located(
             SbisContactsPageLocators.SBIS_KAMCHATKA_ADRESS
         )
     )
-    url = 'https://sbis.ru/contacts/41-kamchatskij-kraj?tab=clients'
 
     assert sbis_contacts_page.driver.current_url == url
-    assert r.text == 'Петропавловск-Камчатский'
-    assert s.text == 'СБИС - Камчатка'
-    assert a.text == 'ул.Ленинская, 59, оф.202, 205'
+    assert city.text == 'Петропавловск-Камчатский'
+    assert office_name.text == 'СБИС - Камчатка'
+    assert office_address.text == 'ул.Ленинская, 59, оф.202, 205'
